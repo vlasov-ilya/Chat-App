@@ -23,9 +23,9 @@ export default class Chat extends React.Component {
 
     return (
       // Sets colorChoice as chat screen background color
-      <View>
-        <Text>Welcome to the Chat!</Text>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: color }}>
+        <Text>Welcome to the Chat!</Text>
+      <View>
         <TextInput
           style={styles.input}
           placeholder="Give me some time to make it works"

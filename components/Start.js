@@ -80,30 +80,29 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   title: {
-    fontSize: 45,
+    fontSize: 50,
     fontWeight: '600',
-    color: '#fff',
+    color: '#539527',
     alignItems: 'center',
     flex: 1,
-    marginTop: 100,
-    alignItems: 'center'
+    marginTop: 50
   },
   startContainer: {
     width: '90%',
-    height: '45%',
+    height: '50%',
     backgroundColor: '#fff',
-    marginBottom: 20,
+    marginBottom: 100,
     alignItems: 'flex-start',
   },
   button: {
-    backgroundColor: '#757083',
+    backgroundColor: '#00EAFF',
     width: '90%',
     marginLeft: 20,
-    marginBottom: 20,
+    marginBottom: 25,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    height: 60,
+    height: 50,
   },
   buttonText: {
     fontSize: 16,
