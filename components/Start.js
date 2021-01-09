@@ -32,7 +32,7 @@ export default class Start extends React.Component {
               // Any change in the name field is stored as the state, allows adding
               // name to chat screen
               onChangeText={(name) => this.setState({ name })}
-              value={this.state.name}
+              value={name}
               // React-native feature to include accessibility easily
               placeholder='Name'
             />
