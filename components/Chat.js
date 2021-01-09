@@ -1,13 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, TextInput, Button, Text, Platform, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, View, Platform, KeyboardAvoidingView } from 'react-native';
 import { Bubble, GiftedChat } from 'react-native-gifted-chat';
 
 export default class Chat extends React.Component {
   constructor(props) {
     super(props);
-
-    // Set default state for adding text field functionality
-    // const { color } = this.props.route.params;
 
     this.state = {
       messages: [],

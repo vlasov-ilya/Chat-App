@@ -34,6 +34,9 @@ export default class Start extends React.Component {
               onChangeText={(name) => this.setState({ name })}
               value={name}
               // React-native feature to include accessibility easily
+              accessible={true}
+              accessibilityLable="Your name"
+              accessibilityHint='Enter your name, please'
               placeholder='Name'
             />
           </View>
