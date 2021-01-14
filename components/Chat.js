@@ -49,7 +49,7 @@ export default class Chat extends React.Component {
     this.setState({
       messages: [
         {
-          id: _1,
+          id: 1,
           text: this.props.route.params.name + ' is here!',
           createdAt: new Date(),
           system: true,
@@ -90,7 +90,7 @@ export default class Chat extends React.Component {
   onSend(messages = []) {
     this.setState(
       previousState => ({
-        massages: GiftedChat.append(previousState.messages, messages)
+        messages: GiftedChat.append(previousState.messages, messages)
       }),
       () => {
         this.addMessage();
@@ -137,7 +137,7 @@ export default class Chat extends React.Component {
           messages={messages}
           onSend={(messages) => this.onSend(messages)}
           user={{
-            _id: 1,
+            _id: uid,
             name: name,
           }}
         />
