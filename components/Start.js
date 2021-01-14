@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
 
+const firebase = require('firebase');
+require('firebase/firestore');
 
 export default class Start extends React.Component {
   constructor(props) {

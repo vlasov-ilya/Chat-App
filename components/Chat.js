@@ -135,7 +135,7 @@ export default class Chat extends React.Component {
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
           messages={messages}
-          onSend={(messages) => this.onSend(messages)}
+          onSend={messages => this.onSend(messages)}
           user={{
             _id: uid,
             name: name,
