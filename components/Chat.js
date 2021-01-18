@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, View, Platform, KeyboardAvoidingView } from 'react-native';
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -42,7 +42,7 @@ export default class Chat extends React.Component {
         messages: JSON.parse(messages)
       });
     } catch (error) {
-      console.log(error.messages);
+      console.log(error.message);
     }
   };
 
@@ -139,7 +139,7 @@ export default class Chat extends React.Component {
     try {
       await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
     } catch (error) {
-      console.log(error.messages);
+      console.log(error.message);
     }
   }
 
@@ -149,27 +149,12 @@ export default class Chat extends React.Component {
     try {
       await AsyncStorage.removeItem('messages')
     } catch (error) {
-      console.log(error.messages);
+      console.log(error.message);
     }
   }
 
 
   // customize text bubbles 
-  renderBubble = props => {
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          right: {
-            backgroundColor: "#000"
-          },
-          left: {
-            backgroundColor: "#fff"
-          }
-        }} />
-    )
-  }
-
     renderBubble = props => {
       return (
         <Bubble
