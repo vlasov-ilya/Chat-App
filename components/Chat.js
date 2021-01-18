@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Platform, KeyboardAvoidingView } from 'react-native';
-import { Bubble, GiftedChat } from 'react-native-gifted-chat';
+import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
+import AsyncStorage from '@react-native-community/async-storage';
+import NetInfo from '@react-native-community/netinfo';
 const firebase = require('firebase');
 require('firebase/firestore');
 
@@ -21,29 +23,51 @@ export default class Chat extends React.Component {
       })
     }
 
+    // Retrive msg
+    this.referenceMessages = firebase.firestore().collection('messages')
+
     this.state = {
       messages: [],
       user: {},
       uid: 0,
+      isConnected: false
     };
   }
 
-  componentDidMount() {
-    // firebase call 
-    this.authUnsubscribe = firebase.auth().onAuthStateChanged(async user => {
-      if (!user) {
-        user = await firebase.auth().signInAnonymously();
-      }
-      // Update user
+  async getMessages() {
+    let messages = '';
+    try {
+      messages = await AsyncStorage.getItem('messages') || [];
       this.setState({
-        uid: user.uid,
-        loggedInText: "Welcome to the Chat!"
+        messages: JSON.parse(messages)
       });
+    } catch (error) {
+      console.log(error.messages);
+    }
+  };
 
-      // Retrive msg
-      this.referenceMessages = firebase.firestore().collection('messages')
-      // new msg 
-      this.unsubscribe = this.referenceMessages.onSnapshot(this.onCollectionUpdate);
+  async componentDidMount() {
+    // Check onlime status
+    NetInfo.fetch().then(state => {
+      var isConnected = state.isConnected;
+      this.setState({
+        isConnected
+      });
+      this.getMessages();
+      if (isConnected) {
+        // firebase call 
+        this.authUnsubscribe = firebase.auth().onAuthStateChanged(async user => {
+          if (!user) {
+            user = await firebase.auth().signInAnonymously();
+          }
+          // Update user
+          this.setState({
+            uid: user.uid,
+          });
+        });
+        // update collection
+        this.unsubscribe = this.referenceMessages.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
+      }
     });
 
     this.setState({
@@ -58,7 +82,7 @@ export default class Chat extends React.Component {
     })
   }
   //query for stored msgs 
-  onCollectionUpdate = (querySnapshot) => {
+  onCollectionUpdate = querySnapshot => {
     const messages = [];
     // Map throug documents
     querySnapshot.forEach(doc => {
@@ -75,14 +99,24 @@ export default class Chat extends React.Component {
     });
   };
 
+  // Disconnect when close app
+
+  componentWillUnmount() {
+    this.authUnsubscribe();
+    this.unsubscribe();
+  }
+
   // Add new msg to database
-  addMessage() {
+  addMessage(message) {
+    const { _id, createdAt, text, user } = message[0];
     this.referenceMessages.add({
-      _id: this.state.messages[0]._id,
-      text: this.state.messages[0].text,
-      createdAt: this.state.messages[0].createdAt,
-      user: this.state.messages[0].user,
-      uid: this.state.uid,
+      _id: _id,
+      text: text,
+      createdAt: createdAt,
+      user: {
+        _id: user._id,
+        name: user.name
+      }
     });
   }
 
@@ -93,17 +127,35 @@ export default class Chat extends React.Component {
         messages: GiftedChat.append(previousState.messages, messages)
       }),
       () => {
-        this.addMessage();
+        this.saveMessage();
       }
     );
+    this.addMessage(messages)
   }
 
-  componentWillUnmount() {
-    this.authUnsubscribe();
+  // save msg for ofline access 
+
+  async saveMessages() {
+    try {
+      await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
+    } catch (error) {
+      console.log(error.messages);
+    }
   }
+
+  // Allow to delete msgs
+
+  async deleteMessages() {
+    try {
+      await AsyncStorage.removeItem('messages')
+    } catch (error) {
+      console.log(error.messages);
+    }
+  }
+
 
   // customize text bubbles 
-  renderBubble(props) {
+  renderBubble = props => {
     return (
       <Bubble
         {...props}
@@ -118,39 +170,60 @@ export default class Chat extends React.Component {
     )
   }
 
-  render() {
-    // Define props passed from start
-    const { name, color } = this.props.route.params;
-    const { messages, uid } = this.state;
-
-    // Fallback in case no name is entered on start screen
-    if (!name || name === '') name = 'Unnoun'
-
-    // Populates user's name, if entered
-    this.props.navigation.setOptions({ title: name });
-
-    return (
-
-      <View style={{ flex: 1, backgroundColor: color }}>
-        <GiftedChat
-          renderBubble={this.renderBubble.bind(this)}
-          messages={messages}
-          onSend={messages => this.onSend(messages)}
-          user={{
-            _id: uid,
-            name: name,
+    renderBubble = props => {
+      return (
+        <Bubble
+          {...props}
+          wrapperStyle={{
+            right: {
+              backgroundColor: '99FF66'
+            },
+            left: {
+              backgroundColor: '99FFF'
+            }
           }}
         />
-        { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null}
-      </View>
-    );
-  }
-}
+      )
+    }
 
-const styles = StyleSheet.create({
-  input: {
-    borderWidth: 4,
-    borderColor: '#123432',
-    padding: 10,
+    renderInputToolbar = props => {
+      if (this.state.isConnected == false) {
+
+      } else {
+        return (
+          <InputToolbar
+            {...props}
+          />
+        );
+      }
+    }
+
+
+    render() {
+
+      const { name, color } = this.props.route.params;
+      const { messages, uid } = this.state;
+
+          // Fallback in case no name is entered on start screen
+      if (!name || name === '') name = 'Unnoun'
+
+      // props user's Name
+      this.props.navigation, setOptions({ title: name });
+
+      return (
+        <View style={{ flex: 1, backgroundColor: color }}>
+          <GiftedChat
+            renderBubble={this.renderBubble.bind(this)}
+            renderInputToolbar={this.renderInputToolbar}
+            messages={messages}
+            onSend={messages => this.onSend(messages)}
+            user={{
+              _id: uid,
+              name: name,
+            }}
+          />
+          { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null}
+        </View>
+      );
+    }
   }
-})
