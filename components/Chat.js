@@ -127,7 +127,7 @@ export default class Chat extends React.Component {
         messages: GiftedChat.append(previousState.messages, messages)
       }),
       () => {
-        this.saveMessage();
+        this.saveMessages();
       }
     );
     this.addMessage(messages)
@@ -147,7 +147,7 @@ export default class Chat extends React.Component {
 
   async deleteMessages() {
     try {
-      await AsyncStorage.removeItem('messages')
+      await AsyncStorage.removeItem('messages');
     } catch (error) {
       console.log(error.message);
     }
@@ -209,6 +209,6 @@ export default class Chat extends React.Component {
         />
         { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null}
       </View>
-    );
+    )
   }
 }
