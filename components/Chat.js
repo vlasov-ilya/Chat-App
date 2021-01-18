@@ -73,7 +73,7 @@ export default class Chat extends React.Component {
     this.setState({
       messages: [
         {
-          id: 1,
+          _id: 1,
           text: this.props.route.params.name + ' is here!',
           createdAt: new Date(),
           system: true,
@@ -155,60 +155,60 @@ export default class Chat extends React.Component {
 
 
   // customize text bubbles 
-    renderBubble = props => {
+  renderBubble = props => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: '99FF66'
+          },
+          left: {
+            backgroundColor: '99FFF'
+          }
+        }}
+      />
+    )
+  }
+
+  renderInputToolbar = props => {
+    if (this.state.isConnected == false) {
+
+    } else {
       return (
-        <Bubble
+        <InputToolbar
           {...props}
-          wrapperStyle={{
-            right: {
-              backgroundColor: '99FF66'
-            },
-            left: {
-              backgroundColor: '99FFF'
-            }
-          }}
         />
-      )
-    }
-
-    renderInputToolbar = props => {
-      if (this.state.isConnected == false) {
-
-      } else {
-        return (
-          <InputToolbar
-            {...props}
-          />
-        );
-      }
-    }
-
-
-    render() {
-
-      const { name, color } = this.props.route.params;
-      const { messages, uid } = this.state;
-
-          // Fallback in case no name is entered on start screen
-      if (!name || name === '') name = 'Unnoun'
-
-      // props user's Name
-      this.props.navigation, setOptions({ title: name });
-
-      return (
-        <View style={{ flex: 1, backgroundColor: color }}>
-          <GiftedChat
-            renderBubble={this.renderBubble.bind(this)}
-            renderInputToolbar={this.renderInputToolbar}
-            messages={messages}
-            onSend={messages => this.onSend(messages)}
-            user={{
-              _id: uid,
-              name: name,
-            }}
-          />
-          { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null}
-        </View>
       );
     }
   }
+
+
+  render() {
+
+    const { name, color } = this.props.route.params;
+    const { messages, uid } = this.state;
+
+    // Fallback in case no name is entered on start screen
+    if (!name || name === '') name = 'Unnoun'
+
+    // props user's Name
+    this.props.navigation, setOptions({ title: name });
+
+    return (
+      <View style={{ flex: 1, backgroundColor: color }}>
+        <GiftedChat
+          renderBubble={this.renderBubble.bind(this)}
+          renderInputToolbar={this.renderInputToolbar}
+          messages={messages}
+          onSend={messages => this.onSend(messages)}
+          user={{
+            _id: uid,
+            name: name,
+          }}
+        />
+        { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null}
+      </View>
+    );
+  }
+}
