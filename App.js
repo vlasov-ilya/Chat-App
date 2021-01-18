@@ -17,15 +17,15 @@ export default class ChatApp extends Component {
     return (
       // Start and Chat navigation 
       <NavigationContainer>
-        <Stack.Navigator 
-        initialRouteName="Start">
-          <Stack.Screen 
-          name="Start" 
-          component={Start} 
+        <Stack.Navigator
+          initialRouteName="Start">
+          <Stack.Screen
+            name="Start"
+            component={Start}
           />
-          <Stack.Screen 
-          name="Chat" 
-          component={Chat} 
+          <Stack.Screen
+            name="Chat"
+            component={Chat}
           />
         </Stack.Navigator>
       </NavigationContainer>

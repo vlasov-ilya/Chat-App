@@ -86,7 +86,7 @@ export default class Chat extends React.Component {
     const messages = [];
     // Map throug documents
     querySnapshot.forEach(doc => {
-      var data = doc.data();
+      let data = doc.data();
       messages.push({
         _id: data._id,
         text: data.text,
@@ -106,20 +106,6 @@ export default class Chat extends React.Component {
     this.unsubscribe();
   }
 
-  // Add new msg to database
-  addMessage(message) {
-    const { _id, createdAt, text, user } = message[0];
-    this.referenceMessages.add({
-      _id: _id,
-      text: text,
-      createdAt: createdAt,
-      user: {
-        _id: user._id,
-        name: user.name
-      }
-    });
-  }
-
   //store sent msgs
   onSend(messages = []) {
     this.setState(
@@ -133,6 +119,19 @@ export default class Chat extends React.Component {
     this.addMessage(messages)
   }
 
+  // Add new msg to database
+  addMessage(message) {
+    const { _id, createdAt, text, user } = message[0];
+    this.referenceMessages.add({
+      _id: _id,
+      text: text,
+      createdAt: createdAt,
+      user: {
+        _id: user._id,
+        name: user.name
+      }
+    });
+  }
   // save msg for ofline access 
 
   async saveMessages() {
