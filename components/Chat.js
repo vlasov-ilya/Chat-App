@@ -226,8 +226,6 @@ export default class Chat extends React.Component {
     const { name, color } = this.props.route.params;
     const { messages, uid } = this.state;
 
-    // Fallback in case no name is entered on start screen
-    if (!name || name === '') name = 'Unnoun'
 
     // props user's Name
     this.props.navigation.setOptions({ title: name });
