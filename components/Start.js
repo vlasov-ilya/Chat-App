@@ -1,8 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
 
-const firebase = require('firebase');
-require('firebase/firestore');
 
 export default class Start extends React.Component {
   constructor(props) {
@@ -37,9 +35,9 @@ export default class Start extends React.Component {
               value={name}
               // React-native feature to include accessibility easily
               accessible={true}
-              accessibilityLable="Your name"
+              accessibilityLable="Name"
               accessibilityHint='Enter your name, please'
-              placeholder='Name'
+              placeholder="Your name"
             />
           </View>
           <Text style={styles.choose}>

@@ -14,7 +14,7 @@ export default class CustomFuntions extends React.Component {
 
     const cancelButtonIndex = options.length - 1;
 
-    this.context.actionSheet().showActionSheetWithoutOptions(
+    this.context.actionSheet().showActionSheetWithOptions(
       {
         options,
         cancelButtonIndex
@@ -58,8 +58,8 @@ export default class CustomFuntions extends React.Component {
 
       if (status === 'granted') {
         let result = await ImagePicker.launchCameraAsync({
-          mediaTypes: 'Image'
-        }).catch(error => caosole.log(error));
+          mediaTypes: 'Images'
+        }).catch(error => console.log(error));
 
         if (!result.cancelled) {
           this.storeImage(result.uri);
@@ -127,7 +127,7 @@ export default class CustomFuntions extends React.Component {
     return (
       <TouchableOpacity style={[styles.container]} onPress={this.onActionPress}>
         <View style={[styles.wrapper, this.props.wrapperStyle]}>
-          <Text style={[styles.iconText, this.props.iconTextStule]}>+</Text>
+          <Text style={[styles.iconText, this.props.iconTextStyle]}>+</Text>
         </View>
       </TouchableOpacity>
     );
