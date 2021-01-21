@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Platform, KeyboardAvoidingView } from 'react-native';
+import React from 'react';
+import { StyleSheet, View, Platform, KeyboardAvoidingView, YellowBox } from 'react-native';
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-community/async-storage';
 import NetInfo from '@react-native-community/netinfo';
+import MapView from 'react-native-maps';
+import CustomFunctions from './CustomFunctions';
 const firebase = require('firebase');
 require('firebase/firestore');
 
@@ -30,7 +32,9 @@ export default class Chat extends React.Component {
       messages: [],
       user: {},
       uid: 0,
-      isConnected: false
+      isConnected: false,
+      image: null,
+      location: null
     };
   }
 
@@ -74,12 +78,13 @@ export default class Chat extends React.Component {
       messages: [
         {
           _id: 1,
-          text: this.props.route.params.name + ' is here!',
+          text: `${this.props.route.params.name} + ' is here!'`,
           createdAt: new Date(),
           system: true,
         }
       ]
-    })
+    });
+    YellowBox.ignoreWarnings(['Setting a timer']);
   }
   //query for stored msgs 
   onCollectionUpdate = querySnapshot => {
@@ -92,6 +97,8 @@ export default class Chat extends React.Component {
         text: data.text,
         createdAt: data.createdAt.toDate(),
         user: data.user,
+        image: data.image,
+        location: data.location
       });
     });
     this.setState({
@@ -121,16 +128,18 @@ export default class Chat extends React.Component {
 
   // Add new msg to database
   addMessage(message) {
-    const { _id, createdAt, text, user } = message[0];
+    const { _id, createdAt, text, user, image, location } = message[0];
     this.referenceMessages.add({
       _id: _id,
-      text: text,
       createdAt: createdAt,
+      text: text || null,
       user: {
         _id: user._id,
         name: user.name
-      }
-    });
+      },
+      image: image || null,
+      location: location || null
+    })
   }
   // save msg for ofline access 
 
@@ -182,6 +191,35 @@ export default class Chat extends React.Component {
     }
   }
 
+  renderCustomView(props) {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      const longitude = parseInt(currentMessage.location.longitude);
+      const latitude = parseInt(currentMessage.location.latitude);
+      return (
+        <MapView
+          style={{
+            width: 250,
+            height: 150,
+            bordarRadiuse: 15,
+            margin: 5
+          }}
+          region={{
+            longitude,
+            latitude,
+            longitudeDelta: 0.0421,
+            latitudeDelta: 0.0922,
+          }}
+        />
+      );
+    }
+    return null;
+  }
+
+
+  renderActions = (props) => {
+    return <CustomFunctions {...props} />;
+  };
 
   render() {
 
@@ -192,7 +230,7 @@ export default class Chat extends React.Component {
     if (!name || name === '') name = 'Unnoun'
 
     // props user's Name
-    this.props.navigation, setOptions({ title: name });
+    this.props.navigation.setOptions({ title: name });
 
     return (
       <View style={{ flex: 1, backgroundColor: color }}>
@@ -200,6 +238,8 @@ export default class Chat extends React.Component {
           renderBubble={this.renderBubble.bind(this)}
           renderInputToolbar={this.renderInputToolbar}
           messages={messages}
+          renderCustomView={this.renderCustomView}
+          renderActions={this.renderActions}
           onSend={messages => this.onSend(messages)}
           user={{
             _id: uid,
