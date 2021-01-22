@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Platform, KeyboardAvoidingView } from 'react-native';
+import { View, Platform, KeyboardAvoidingView, YellowBox } from 'react-native';
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-community/async-storage';
 import NetInfo from '@react-native-community/netinfo';
@@ -84,6 +84,7 @@ export default class Chat extends React.Component {
         }
       ]
     });
+    YellowBox.ignoreWarning(['Setting a timer'])
   }
   //query for stored msgs 
   onCollectionUpdate = querySnapshot => {

@@ -9,6 +9,8 @@ import 'firebase/firestore';
 
 export default class CustomFunctions extends React.Component {
 
+  // Creating Functions for users like Location, Img share 
+
   onActionPress = () => {
     const options = ['Send Image', 'Take Photo', 'Send Location', 'Cancel'];
 
@@ -33,12 +35,17 @@ export default class CustomFunctions extends React.Component {
     );
   };
 
+  // Permission request before use any of Phone function
+
+
+  // Permission for galery
+
   pickImage = async () => {
     try {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
       if (status === 'granted') {
-        let result = await ImagePicker.launchImageLibraryAsync({ 
+        let result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: 'Images'
         }).catch(error => console.log(error));
 
@@ -51,6 +58,8 @@ export default class CustomFunctions extends React.Component {
       console.log(error);
     }
   }
+
+  // Permission for camera 
 
   takePhoto = async () => {
     try {
@@ -71,6 +80,8 @@ export default class CustomFunctions extends React.Component {
     }
   }
 
+  // Settimg up Imge converting to BLOB
+  // Uploading and storeging in data
   storeImage = async (uri) => {
     try {
       const { props } = this.props;
@@ -87,6 +98,8 @@ export default class CustomFunctions extends React.Component {
         xhr.open('GET', uri, true);
         xhr.send(null);
       });
+
+      // creating name for file
 
       const uriParse = uri.split('/');
       const uriName = uriParse[uriParse.length - 1];
@@ -106,6 +119,8 @@ export default class CustomFunctions extends React.Component {
       console.log(error);
     }
   }
+
+  // Permission for location
 
   getLocation = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
