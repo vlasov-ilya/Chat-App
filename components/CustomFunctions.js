@@ -7,7 +7,7 @@ import * as Location from 'expo-location';
 import firebase from 'firebase';
 import 'firebase/firestore';
 
-export default class CustomFuntions extends React.Component {
+export default class CustomFunctions extends React.Component {
 
   onActionPress = () => {
     const options = ['Send Image', 'Take Photo', 'Send Location', 'Cancel'];
@@ -38,7 +38,7 @@ export default class CustomFuntions extends React.Component {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
       if (status === 'granted') {
-        let result = await ImagePicker.launchImageLibraryAsync({
+        let result = await ImagePicker.launchImageLibraryAsync({ 
           mediaTypes: 'Images'
         }).catch(error => console.log(error));
 
@@ -158,6 +158,6 @@ const styles = StyleSheet.create({
   }
 });
 
-CustomFuntions.contextType = {
+CustomFunctions.contextTypes = {
   actionSheet: PropTypes.func
 };

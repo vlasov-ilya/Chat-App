@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Platform, KeyboardAvoidingView, YellowBox } from 'react-native';
+import { StyleSheet, View, Platform, KeyboardAvoidingView } from 'react-native';
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-community/async-storage';
 import NetInfo from '@react-native-community/netinfo';
@@ -84,7 +84,6 @@ export default class Chat extends React.Component {
         }
       ]
     });
-    YellowBox.ignoreWarnings(['Setting a timer']);
   }
   //query for stored msgs 
   onCollectionUpdate = querySnapshot => {
@@ -169,10 +168,10 @@ export default class Chat extends React.Component {
         {...props}
         wrapperStyle={{
           right: {
-            backgroundColor: '99FF66'
+            backgroundColor: '#99F99F'
           },
           left: {
-            backgroundColor: '99FFF'
+            backgroundColor: '#99FFFf'
           }
         }}
       />
